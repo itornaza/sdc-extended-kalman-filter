@@ -8,8 +8,8 @@ using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using std::vector;
 
-/*
- * Constructor.
+/**
+ * Constructor
  */
 FusionEKF::FusionEKF() {
   is_initialized_ = false;
@@ -41,12 +41,11 @@ FusionEKF::FusionEKF() {
 }
 
 /**
-* Destructor.
-*/
+ * Destructor
+ */
 FusionEKF::~FusionEKF() {}
 
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
-
 
   /*****************************************************************************
    *  Initialization
