@@ -23,11 +23,11 @@ using the following settings:
 
 * indent using spaces
 * set tab width to 2 spaces (keeps the matrices in source code aligned)
----
 
-## Code Style
+### Code Style
 
 Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
+---
 
 ## Installation
 
@@ -48,6 +48,14 @@ This repository includes two files that can be used to set up and install [uWebS
 * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
 * Windows: recommend using [MinGW](http://www.mingw.org/)
 
+## Basic Build Instructions
+
+1. Clone this repo
+2. Make a build directory: `mkdir build && cd build`
+3. Compile: `cmake .. && make` 
+   * On windows, you may need to run: `cmake .. -G "Unix Makefiles" && make`
+4. Run it: `./ExtendedKF `
+
 ## Data flow between the program and the Simulator
 
 Here is the main protcol that main.cpp uses for uWebSocketIO in communicating with the simulator:
@@ -64,14 +72,6 @@ Here is the main protcol that main.cpp uses for uWebSocketIO in communicating wi
 ["rmse_y"]
 ["rmse_vx"]
 ["rmse_vy"]
-
-## Basic Build Instructions
-
-1. Clone this repo
-2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make` 
-   * On windows, you may need to run: `cmake .. -G "Unix Makefiles" && make`
-4. Run it: `./ExtendedKF `
 
 ## Generating Additional Data
 
