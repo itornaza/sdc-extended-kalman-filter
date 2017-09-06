@@ -54,7 +54,13 @@ This repository includes two files that can be used to set up and install [uWebS
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make` 
    * On windows, you may need to run: `cmake .. -G "Unix Makefiles" && make`
-4. Run it: `./ExtendedKF `
+4. Run it: `./ExtendedKF`
+
+```
+$ mkdir build && cd build
+$ cmake .. && make
+$ ./ExtendedKF
+```
 
 ## Data flow between the program and the Simulator
 
