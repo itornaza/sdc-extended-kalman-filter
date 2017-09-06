@@ -46,6 +46,10 @@ FusionEKF::FusionEKF() {
  */
 FusionEKF::~FusionEKF() {}
 
+/**
+ * Responsible for the initialization of the Kalman filter as well as calling 
+ * the prediction and update steps of the Kalman filter
+ */
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
   //------------------

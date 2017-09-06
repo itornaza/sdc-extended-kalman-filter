@@ -13,9 +13,9 @@ using namespace std;
 using json = nlohmann::json;
 
 /**
- *  Checks if the SocketIO event has JSON data.
- *  If there is data the JSON object in string format will be returned,
- *  else the empty string "" will be returned.
+ * Checks if the SocketIO event has JSON data.
+ * If there is data the JSON object in string format will be returned,
+ * else the empty string "" will be returned.
  */
 std::string hasData(std::string s) {
   auto found_null = s.find("null");
@@ -68,6 +68,12 @@ int main() {
           iss >> sensor_type;
 
           if (sensor_type.compare("L") == 0) {
+            // LIDAR Column headers in the data file are:
+            // sensor_type, x_measured, y_measured,
+            // timestamp,
+            // x_groundtruth, y_groundtruth, vx_groundtruth, vy_groundtruth,
+            // yaw_groundtruth, yawrate_groundtruth
+            
             meas_package.sensor_type_ = MeasurementPackage::LASER;
             meas_package.raw_measurements_ = VectorXd(2);
             float px;
@@ -77,7 +83,15 @@ int main() {
             meas_package.raw_measurements_ << px, py;
             iss >> timestamp;
             meas_package.timestamp_ = timestamp;
+            
           } else if (sensor_type.compare("R") == 0) {
+            // RADAR column headers in the data file are:
+            // sensor_type,
+            // rho_measured, phi_measured, rhodot_measured,
+            // timestamp,
+            // x_groundtruth, y_groundtruth, vx_groundtruth, vy_groundtruth,
+            // yaw_groundtruth, yawrate_groundtruth
+            
             meas_package.sensor_type_ = MeasurementPackage::RADAR;
             meas_package.raw_measurements_ = VectorXd(3);
             float ro;
@@ -146,10 +160,11 @@ int main() {
   });
 
   /**
-   *  We don't need this since we're not using HTTP but if it's removed the program
-   *  doesn't compile :-(
+   * We don't need this since we're not using HTTP but if it's removed the
+   * program doesn't compile :-(
    */
-  h.onHttpRequest([](uWS::HttpResponse *res, uWS::HttpRequest req, char *data, size_t, size_t) {
+  h.onHttpRequest([](uWS::HttpResponse *res, uWS::HttpRequest req,
+                     char *data, size_t, size_t) {
     const std::string s = "<h1>Hello world!</h1>";
     
     if (req.getUrl().valueLength == 1) {
@@ -164,7 +179,8 @@ int main() {
     std::cout << "Connected!!!" << std::endl;
   });
 
-  h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) {
+  h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws,
+                         int code, char *message, size_t length) {
     ws.close();
     std::cout << "Disconnected" << std::endl;
   });
