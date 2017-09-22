@@ -1,13 +1,18 @@
 #include <iostream>
-
 #include "tools.h"
 
 using Eigen::VectorXd;
 using Eigen::MatrixXd;
 using std::vector;
 
+/**
+ * Constructor
+ */
 Tools::Tools() {}
 
+/**
+ * Destructor
+ */
 Tools::~Tools() {}
 
 VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
@@ -24,9 +29,10 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
     cout << "Error: The estimation and ground truth vectors sizes are not equal"
          << endl;
   } else {
-    //----------------
-    // Calculate RMSE
-    //----------------
+    
+    //---------------------
+    // Calculate the RMSE
+    //---------------------
     
     // Accumulate squared residuals
     for (int i = 0; i < estimations.size(); ++i) {
@@ -44,10 +50,9 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 }
 
 MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
-  
   // Local variables
-  MatrixXd Hj(3,4);
-  float e = 0.0001;
+  MatrixXd Hj(3,4); // The Jacobian matrix
+  float e = 0.0001; // Used as a small number for floats comparisson to zero
   float px = x_state(0);
   float py = x_state(1);
   float vx = x_state(2);
@@ -56,10 +61,11 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   // Sub-computation for denominator
   float denom = pow(px, 2) + pow(py, 2);
   
-  // Validate input
+  // Validate input, ensure no divisions by zero
   if (fabs(denom) < e) {
     cout << "Error: Division by Zero in the Hj matrix" << endl;
   } else {
+    
     //-------------------------------
     // Compute the Jacobian matrix
     //-------------------------------
@@ -68,19 +74,19 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
     float denom_root = sqrt(denom);
     float denom_pow_root = (pow(denom, 3.0 / 2.0));
     
-    // Partial derivatives for - ρ
+    // Partial derivatives for - ρ (first row of Hj)
     Hj(0, 0) = px / denom_root;
     Hj(0, 1) = py / denom_root;
     Hj(0, 2) = 0;
     Hj(0, 3) = 0;
     
-    // Partial derivatives for - φ
+    // Partial derivatives for - φ (second row of Hj)
     Hj(1, 0) = -py / denom;
     Hj(1, 1) = px / denom;
     Hj(1, 2) = 0;
     Hj(1, 3) = 0;
     
-    // Partial derivatives for - ρ'
+    // Partial derivatives for - ρ' (third row of Hj)
     Hj(2, 0) = py * ((vx * py) - (vy * px)) / denom_pow_root;
     Hj(2, 1) = px * ((vy * px) - (vx * py)) / denom_pow_root;
     Hj(2, 2) = px / denom_root;
