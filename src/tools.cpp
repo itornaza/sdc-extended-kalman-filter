@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tools.h"
+#include "constants.h"
 
 using Eigen::VectorXd;
 using Eigen::MatrixXd;
@@ -61,9 +62,16 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   // Sub-computation for denominator
   float denom = pow(px, 2) + pow(py, 2);
   
+  // Deal with the special case problems
+  if (fabs(px) < E1 && fabs(py) < E1){
+    px = E1;
+    py = E1;
+  }
+  
   // Validate input, ensure no divisions by zero
-  if (fabs(denom) < e) {
+  if (fabs(denom) < E2) {
     cout << "Error: Division by Zero in the Hj matrix" << endl;
+    denom = E2;
   } else {
     
     //-------------------------------
