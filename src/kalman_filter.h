@@ -65,6 +65,14 @@ public:
    */
   void UpdateEKF(const Eigen::VectorXd &z);
 
+private:
+  
+  /**
+   * Updates the matrices using the Kalman Filter equations with y known
+   * @param y The error vector y = z - Hx or y = z - h(x) for radar
+   */
+  void UpdateMatrices(const Eigen::VectorXd &y);
+  
 };
 
 #endif /* KALMAN_FILTER_H_ */

@@ -30,7 +30,30 @@ public:
    * A helper method to calculate Jacobians
    */
   MatrixXd CalculateJacobian(const VectorXd& x_state);
-
+  
+  /**
+   * A helper method to calculate h(x) for the EKF
+   */
+  VectorXd CalculateHx(const VectorXd& x_state);
+  
+  /**
+   * A helper method to provide an identity matrix
+   */
+  MatrixXd GetI(const VectorXd& x_state);
+  
+  /**
+   * A helper method to normalize angles
+   * wrap x -> [0,max)
+   * From: http://stackoverflow.com/a/29871193/1321129
+   */
+  float wrapMax(float x, float max);
+  
+  /**
+   * A helper method to normalize angles
+   * wrap x -> [min,max)
+   * From: http://stackoverflow.com/a/29871193/1321129
+   */
+  float wrapMinMax(float x, float min, float max);
 };
 
 #endif /* TOOLS_H_ */

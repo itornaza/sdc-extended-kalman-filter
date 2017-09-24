@@ -47,8 +47,6 @@ FusionEKF::~FusionEKF() {}
  * the prediction and update steps of the Kalman filter
  */
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
-  if (DEBUG) { cout << "Enter FusionEKF::ProcessMeasurement()" << endl; }
-  
   //------------------
   // Initialization
   //------------------
@@ -91,9 +89,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
     // Initialize the kalman filter with the current position and zero velocity
     ekf_.x_ << px, py, vx , vy;
     
-    // TODO: FIX
-    // Deal with the special case initialisation problems
-    if (fabs(ekf_.x_(0)) < E1 && fabs(ekf_.x_(1)) < E1){
+    // Deal with special case initialisation problem
+    if (fabs(ekf_.x_(0)) < E1 && fabs(ekf_.x_(1)) < E1) {
       ekf_.x_(0) = E1;
       ekf_.x_(1) = E1;
     }
@@ -158,16 +155,20 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // Radar updates
+    Tools tools;
     Hj_ = tools.CalculateJacobian(ekf_.x_);
     ekf_.H_ = Hj_;
     ekf_.R_ = R_radar_;
     
-    // TODO: DEBUG the UpdateEKF to avoid the segmentation fault
+    // Using the Extended Kalman Filter and the h(x) function
     ekf_.UpdateEKF(measurement_pack.raw_measurements_);
+    
   } else {
     // Laser updates
     ekf_.H_ = H_laser_;
     ekf_.R_ = R_laser_;
+    
+    // Using the Normal Kalman Filter
     ekf_.Update(measurement_pack.raw_measurements_);
   }
   
