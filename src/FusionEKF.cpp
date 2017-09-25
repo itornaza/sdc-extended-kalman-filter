@@ -6,6 +6,7 @@
 #include "constants.h"
 
 using namespace std;
+using namespace Constants;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using std::vector;
@@ -35,6 +36,23 @@ FusionEKF::FusionEKF() {
   R_radar_ << 0.09, 0,      0,
               0,    0.0009, 0,
               0,    0,      0.09;
+  
+  //the initial transition matrix F_
+  ekf_.F_ = MatrixXd(4, 4);
+  ekf_.F_ <<  1, 0, 1, 0,
+              0, 1, 0, 1,
+              0, 0, 1, 0,
+              0, 0, 0, 1;
+  
+  // Initialize the state covariance matrix P
+  ekf_.P_ = MatrixXd(4, 4);
+  ekf_.P_ <<  1,  0,  0,    0,
+              0,  1,  0,    0,
+              0,  0,  1000, 0,
+              0,  0,  0,    1000;
+  
+  // Object to use the helper methods
+  Tools tools;
 }
 
 /**
@@ -72,35 +90,27 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
       // Convert the position from polar to cartesian coordinates
       // Discard the velocity because it is the radial velocity which
       // differs from the object velocity
+      // Note: radar radial velocity (ρ') differs from the object's velocity
+      // v, so we set it to zero
       px = rho * cos(phi);
       py = rho * sin(phi);
       
-      // Note: radar radial velocity (ρ') differs from the object's velocity
-      // v, so we set it to zero
-      
     } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // Get the location coordinates from the pack
+      // Note: lidar does not provide velocity measurements
       float px = measurement_pack.raw_measurements_[0];
       float py = measurement_pack.raw_measurements_[1];
-      
-      // Note: lidar does not provide velocity measurements
     }
 
-    // Initialize the kalman filter with the current position and zero velocity
-    ekf_.x_ << px, py, vx , vy;
-    
-    // Deal with special case initialisation problem
-    if (fabs(ekf_.x_(0)) < E1 && fabs(ekf_.x_(1)) < E1) {
-      ekf_.x_(0) = E1;
-      ekf_.x_(1) = E1;
+    // Avoid the px = 0 and py = 0 case for initialization
+    if (fabs(px) < E1 && fabs(py) < E1) {
+      if (DEBUG) { cout << "Initialization with px = py = 0" << endl; }
+      px = E1;
+      py = E1;
     }
     
-    // Initialize the state covariance matrix P
-    ekf_.P_ = MatrixXd(4, 4);
-    ekf_.P_ <<  1,  0,  0,    0,
-                0,  1,  0,    0,
-                0,  0,  1000, 0,
-                0,  0,  0,    1000;
+    // Initialize the kalman filter with the current position and zero velocity
+    ekf_.x_ << px, py, vx , vy;
     
     // Update the previous timestamp with the initial measurement timestamp
     previous_timestamp_ = measurement_pack.timestamp_;
@@ -117,7 +127,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
   // Compute the time elapsed between the current and previous measurements
   // dt is expressed in seconds where the pack provides msecs
   float dt = (measurement_pack.timestamp_ - previous_timestamp_) / MSEC_TO_SEC;
-  if (DEBUG) { cout << "dt = " << dt << endl; }
   
   // Update the previous timestamp with the measurement timestamp
   previous_timestamp_ = measurement_pack.timestamp_;
@@ -141,10 +150,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
   // Set the process covariance matrix Q
   ekf_.Q_ = MatrixXd(4, 4);
   ekf_.Q_ <<
-    (dt_4/4)*noise_ax,  0,               (dt_3/2)*noise_ax, 0,
-    0,                  dt_4/4*noise_ay, 0,                 (dt_3/2)*noise_ay,
-    (dt_3/2)*noise_ax, 0,                dt_2*noise_ax,     0,
-    0,               (dt_3/2)*noise_ay,  0,                 dt_2*noise_ay;
+    (dt_4/4)*noise_ax, 0,                 (dt_3/2)*noise_ax, 0,
+    0,                 dt_4/4*noise_ay,   0,                 (dt_3/2)*noise_ay,
+    (dt_3/2)*noise_ax, 0,                 dt_2*noise_ax,     0,
+    0,                 (dt_3/2)*noise_ay, 0,                 dt_2*noise_ay;
   
   // Kalman Filter Predict step
   ekf_.Predict();
@@ -153,26 +162,23 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
   // Update
   //------------------
 
-  if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-    // Radar updates
-    Tools tools;
-    Hj_ = tools.CalculateJacobian(ekf_.x_);
-    ekf_.H_ = Hj_;
+  if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR
+      && RADAR_ON) {
+    // Radar updates (using Hj and h(x))
+    ekf_.H_ = tools.CalculateJacobian(ekf_.x_);
     ekf_.R_ = R_radar_;
-    
-    // Using the Extended Kalman Filter and the h(x) function
     ekf_.UpdateEKF(measurement_pack.raw_measurements_);
-    
-  } else {
-    // Laser updates
+  } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER
+             && LASER_ON){
+    // Laser updates (using H)
     ekf_.H_ = H_laser_;
     ekf_.R_ = R_laser_;
-    
-    // Using the Normal Kalman Filter
     ekf_.Update(measurement_pack.raw_measurements_);
   }
   
   // Print the output
-  cout << "x_ = " << ekf_.x_ << endl;
-  cout << "P_ = " << ekf_.P_ << endl;
+  if (VERBOSE) {
+    cout << "x_ = " << ekf_.x_ << endl;
+    cout << "P_ = " << ekf_.P_ << endl;
+  }
 }

@@ -4,6 +4,7 @@
 #include "tools.h"
 #include "constants.h"
 
+using namespace Constants;
 using Eigen::VectorXd;
 using Eigen::MatrixXd;
 using std::vector;
@@ -20,7 +21,6 @@ Tools::~Tools() {}
 
 VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
                               const vector<VectorXd> &ground_truth) {
-  // Local variables
   VectorXd rmse(4);
   rmse << 0,0,0,0;
   VectorXd residual;
@@ -32,11 +32,6 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
     cout << "Error: The estimation and ground truth vectors sizes are not equal"
          << endl;
   } else {
-    
-    //---------------------
-    // Calculate the RMSE
-    //---------------------
-    
     // Accumulate squared residuals
     for (int i = 0; i < estimations.size(); ++i) {
       residual = estimations[i] - ground_truth[i];
@@ -49,59 +44,41 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
     rmse = rmse.array().sqrt();
   }
   
+  // Return the RMSE
   return rmse;
 }
 
 MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
-  // Local variables
-  MatrixXd Hj(3,4); // The Jacobian matrix
-  float e = 0.0001; // Used as a small number for floats comparisson to zero
+  // The Jacobian matrix
+  MatrixXd Hj(3,4);
+  
+  // State parameters
   float px = x_state(0);
   float py = x_state(1);
   float vx = x_state(2);
   float vy = x_state(3);
   
-  // Sub-computation for denominator
-  float denom = pow(px, 2) + pow(py, 2);
-  
-  // TODO: Deal with the special case problems
-  if (fabs(px) < E1 && fabs(py) < E1){
-    px = E1;
-    py = E1;
-  }
+  // Sub-computation for Hj elements
+  float den = pow(px, 2) + pow(py, 2);
+  float den_rt = sqrt(den);
+  float den_p_rt = sqrt(pow(den, 3.0));
+  float num_1 = py * ((vx * py) - (vy * px));
+  float num_2 = px * ((vy * px) - (vx * py));
   
   // Validate input, ensure no divisions by zero
-  if (fabs(denom) < E2) {
-    cout << "Error: Division by Zero in the Hj matrix" << endl;
-    denom = E2;
+  if (fabs(den) < E1) {
+    if (DEBUG) { cout << "Error: Division by Zero in the Hj matrix" << endl; }
+    den = E1;
+    den_rt = E1;
+    den_p_rt = E1;
   }
   
-  //-------------------------------
-  // Compute the Jacobian matrix
-  //-------------------------------
+  // Assign the elements to the Hj matrix
+  Hj << px/den_rt,      py/den_rt,      0,            0,
+        -py/den,        px/den,         0,            0,
+        num_1/den_p_rt, num_2/den_p_rt, px/den_rt,  py/den_rt;
   
-  // Sub-computations for the denominators, put here for efficiency
-  float denom_root = sqrt(denom);
-  float denom_pow_root = sqrt(pow(denom, 3.0));
-  
-  // Partial derivatives for - ρ (first row of Hj)
-  Hj(0, 0) = px / denom_root;
-  Hj(0, 1) = py / denom_root;
-  Hj(0, 2) = 0;
-  Hj(0, 3) = 0;
-  
-  // Partial derivatives for - φ (second row of Hj)
-  Hj(1, 0) = -py / denom;
-  Hj(1, 1) = px / denom;
-  Hj(1, 2) = 0;
-  Hj(1, 3) = 0;
-  
-  // Partial derivatives for - ρ' (third row of Hj)
-  Hj(2, 0) = py * ((vx * py) - (vy * px)) / denom_pow_root;
-  Hj(2, 1) = px * ((vy * px) - (vx * py)) / denom_pow_root;
-  Hj(2, 2) = px / denom_root;
-  Hj(2, 3) = py / denom_root;
-  
+  // Return the Jacobian matrix Hj
   return Hj;
 }
 
@@ -120,19 +97,18 @@ VectorXd Tools::CalculateHx(const VectorXd& x_state) {
   float vx = x_state(2);
   float vy = x_state(3);
   
-  //-------------------
-  // Compute the h(x)
-  //-------------------
-  
   // Set up the h(x) vector elements
   rho = sqrt(pow(px, 2) + pow(py, 2));
   
   // Εnsure no divisions by zero in the rest of the h(x) calculations
-  if (fabs(rho) < E1 || fabs(px) < E1) {
-    cout << "Error: Division by Zero in the h(x) matrix" << endl;
-    
-    // TODO: Find a better way to continue
-    exit(EXIT_FAILURE);
+  if (fabs(rho) < E1) {
+    if (DEBUG) {cout << "Error: Division by Zero in the h(x) matrix" << endl;}
+    rho = E1;
+  }
+  
+  if (fabs(px) < E1) {
+    if (DEBUG) {cout << "Error: Division by Zero in the h(x) matrix" << endl;}
+    px = E1;
   }
   
   // Resulting angle φ in radians range [-pi, pi]
@@ -142,6 +118,7 @@ VectorXd Tools::CalculateHx(const VectorXd& x_state) {
   // Initialize h(x) with the polar coordinates: ρ, φ, ρ'
   h << rho, phi, rho_dot;
   
+  // Return the h(x) function
   return h;
 }
 
@@ -151,7 +128,6 @@ MatrixXd Tools::GetI(const VectorXd& x_state) {
 }
 
 float Tools::wrapMax(float x, float max) {
-  /* integer math: `(max + x % max) % max` */
   return fmod(max + fmod(x, max), max);
 }
 
