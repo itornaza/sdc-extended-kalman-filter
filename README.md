@@ -1,33 +1,10 @@
 # Extended Kalman Filter Project
 
-Part of the Self-Driving Car Engineer Nanodegree Program
+In this project we utilize a kalman filter to estimate the state of a moving object of interest with noisy lidar and radar measurements and obtaining RMSE values that are lower that the tolerance outlined in the project [rubric](https://review.udacity.com/#!/rubrics/748/view).
 
-In this project we utilize a kalman filter to estimate the state of a moving object of interest with noisy lidar and radar measurements and obtaining RMSE values that are lower that the tolerance outlined in the project rubric. 
+## Results
 
-The rubric for this project can be found [here](https://review.udacity.com/#!/rubrics/748/view)
 
-Note: the project is buildable using cmake and make!
-
----
-## TODO: (Remove before submission)
-
-Note that the programs that need to be written to accomplish the project are src/FusionEKF.cpp, src/FusionEKF.h, kalman_filter.cpp, kalman_filter.h, tools.cpp, and tools.h
-
-The program main.cpp has already been filled out, but feel free to modify it.
-
-### Editor Settings
-
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
-
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
-
-### Code Style
-
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
----
 
 ## Installation
 
