@@ -8,11 +8,16 @@
  * Constants to be used throughout the project
  */
 namespace Constants {
-  const bool VERBOSE = TRUE;
-  const bool DEBUG = TRUE;
-  const bool RADAR_ON = TRUE;
-  const bool LASER_ON = TRUE;
+  // Used in calculations
   const float MSEC_TO_SEC = 1000000.0;
   const float E1 = 0.0001;
+  
+  // Console output
+  const bool VERBOSE = FALSE;
+  const bool DEBUG = FALSE;
+  
+  // Mode of operation
+  const bool RADAR_ON = TRUE;
+  const bool LASER_ON = TRUE;
 }
 #endif /* ION_CONSTANTS_H_ */
