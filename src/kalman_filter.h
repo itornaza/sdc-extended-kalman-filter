@@ -2,6 +2,7 @@
 #define KALMAN_FILTER_H_
 
 #include "Eigen/Dense"
+#include "tools.h"
 
 class KalmanFilter {
 public:
@@ -66,6 +67,9 @@ public:
   void UpdateEKF(const Eigen::VectorXd &z);
 
 private:
+  
+  // Object to use the helper methods
+  Tools tools;
   
   /**
    * Updates the matrices using the Kalman Filter equations with y known

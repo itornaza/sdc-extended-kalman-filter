@@ -51,7 +51,6 @@ void KalmanFilter::Update(const VectorXd &z) {
  * Update the state by using Kalman Filter equations for the Radar sensor
  */
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
-  Tools tools; // Object to use the helper methods
   MatrixXd y; // Error vector
   VectorXd h(3); // The h(x) function for the EKF
   
@@ -69,7 +68,6 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 }
 
 void KalmanFilter::UpdateMatrices(const VectorXd &y) {
-  Tools tools; // Object to use the helper methods
   MatrixXd S;
   MatrixXd K; // Kalman gain
   MatrixXd I = tools.GetI(x_); // Identity matrix

@@ -50,9 +50,6 @@ FusionEKF::FusionEKF() {
               0,  1,  0,    0,
               0,  0,  1000, 0,
               0,  0,  0,    1000;
-  
-  // Object to use the helper methods
-  Tools tools;
 }
 
 /**
@@ -79,8 +76,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
     float vx = 0;
     float vy = 0;
     
-    if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR
-        && RADAR_ON) {
+    if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR &&
+        RADAR_ON) {
       // Get the radar measurements from the pack
       float rho = measurement_pack.raw_measurements_[0];      // ρ
       float phi = measurement_pack.raw_measurements_[1];      // φ
@@ -96,10 +93,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
       
       // Initialize only on the very first measurement
       if (DEBUG) { cout << "Radar initialization measurement" << endl; }
-      is_initialized_ = true;
       
-    } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER
-               && LASER_ON) {
+      
+    } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER &&
+               LASER_ON) {
       // Get the location coordinates from the pack
       // Note: lidar does not provide velocity measurements
       float px = measurement_pack.raw_measurements_[0];
@@ -107,10 +104,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
       
       // Initialize only on the very first measurement
       if (DEBUG) { cout << "Lidar initialization measurement" << endl; }
-      is_initialized_ = true;
     } else {
       if (DEBUG) { cout << "All sensors are off" << endl; }
-      is_initialized_ = true;
     }
 
     // Avoid the px = 0 and py = 0 case for initialization
@@ -122,6 +117,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
     
     // Initialize the kalman filter with the current position and zero velocity
     ekf_.x_ << px, py, vx , vy;
+    is_initialized_ = true;
     
     // Update the previous timestamp with the initial measurement timestamp
     previous_timestamp_ = measurement_pack.timestamp_;
@@ -172,14 +168,14 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack){
   // Update
   //------------------
 
-  if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR
-      && RADAR_ON) {
+  if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR &&
+      RADAR_ON) {
     // Radar updates (using Hj and h(x))
     ekf_.H_ = tools.CalculateJacobian(ekf_.x_);
     ekf_.R_ = R_radar_;
     ekf_.UpdateEKF(measurement_pack.raw_measurements_);
-  } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER
-             && LASER_ON) {
+  } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER &&
+             LASER_ON) {
     // Laser updates (using H)
     ekf_.H_ = H_laser_;
     ekf_.R_ = R_laser_;
