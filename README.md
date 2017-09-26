@@ -26,8 +26,9 @@ Simulation with only the Lidar - On: [youtube video](https://youtu.be/HWgJ2dBUb_
 Simulation with only the Radar - On: [youtube video](https://youtu.be/wNag24x1FrM)
 
 To summarize the results
+
 |              | X         | Y           | VX        | VY        |
-|:---------:|:-------:|:--------:|:---------:|:---------:|
+|----------|---------|----------|-------- -|----------|
 | Both     | 0.0982  | 0.0897  | 0.3929 |  0.4075 |
 | Lidar     | 0.1526  |  0.1213 | 0.7062 |  0.6030 |
 | Radar   | 0.2271  | 0.3466  | 0.6587 |  0.7631 |
