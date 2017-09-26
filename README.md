@@ -13,13 +13,13 @@ In this project we utilize a kalman filter to estimate the state of a moving obj
 
 In order to validate the Extended Kalman Filter performance, the filter was applied in three scenarios. While using: both the radar and lidar sensors, only the lidar sensor and only the radar sensor. After comparing the three respective oucomes we validate that the fusion of both the radar and lidar sensors provided the best result.
 
-Simulation with both Radar and Lidar on: [youtube](https://youtu.be/UkB2onGEMqI)
+Simulation with both Radar and Lidar on: [youtube video](https://youtu.be/UkB2onGEMqI)
 ![alt text][image1]
 
-Simulation with only the Lidar on: [youtube](https://youtu.be/HWgJ2dBUb_o)
+Simulation with only the Lidar on: [youtube video](https://youtu.be/HWgJ2dBUb_o)
 ![alt text][image2]
 
-Simulation with only the Radar on: [youtube](https://youtu.be/wNag24x1FrM)
+Simulation with only the Radar on: [youtube video](https://youtu.be/wNag24x1FrM)
 ![alt text][image3]
 
 ## Installation
@@ -54,6 +54,8 @@ $ mkdir build && cd build
 $ cmake .. && make
 $ ./ExtendedKF
 ```
+
+Note: If you want to run the program with different sensor configuration see the `./src/constants.h` file.
 
 ## Data flow between the program and the Simulator
 
