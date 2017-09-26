@@ -13,14 +13,24 @@ In this project we utilize a kalman filter to estimate the state of a moving obj
 
 In order to validate the Extended Kalman Filter performance, the filter was applied in three scenarios. While using: both the radar and lidar sensors, only the lidar sensor and only the radar sensor. After comparing the three respective oucomes we validate that the fusion of both the radar and lidar sensors provided the best result.
 
-Simulation with both Radar and Lidar - On: [youtube video](https://youtu.be/UkB2onGEMqI)
 ![alt text][image1]
 
-Simulation with only the Lidar - On: [youtube video](https://youtu.be/HWgJ2dBUb_o)
+Simulation with both Radar and Lidar - On: [youtube video](https://youtu.be/UkB2onGEMqI)
+
 ![alt text][image2]
 
-Simulation with only the Radar - On: [youtube video](https://youtu.be/wNag24x1FrM)
+Simulation with only the Lidar - On: [youtube video](https://youtu.be/HWgJ2dBUb_o)
+
 ![alt text][image3]
+
+Simulation with only the Radar - On: [youtube video](https://youtu.be/wNag24x1FrM)
+
+To summarize the results
+|              | X         | Y           | VX        | VY        |
+|:---------:|:-------:|:--------:|:---------:|:---------:|
+| Both     | 0.0982  | 0.0897  | 0.3929 |  0.4075 |
+| Lidar     | 0.1526  |  0.1213 | 0.7062 |  0.6030 |
+| Radar   | 0.2271  | 0.3466  | 0.6587 |  0.7631 |
 
 ## Installation
 
