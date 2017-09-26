@@ -1,6 +1,6 @@
 # Extended Kalman Filter Project
 
-In this project we utilize a kalman filter to estimate the state of a moving object of interest with noisy lidar and radar measurements and obtaining RMSE values that are lower that the tolerance outlined in the project [rubric](https://review.udacity.com/#!/rubrics/748/view).
+This project utilizes a kalman filter to estimate the state of a moving object of interest with noisy lidar and radar measurements and obtaining RMSE values that are lower that the tolerance outlined in the project [rubric](https://review.udacity.com/#!/rubrics/748/view).
 
 
 [//]: # (Image References)
@@ -29,7 +29,7 @@ The table below summarizes the results for the three runs. It is clear that sens
 
 | Sensor  | X         | Y           | VX        | VY         |
 |----------|---------|----------|----------|----------|
-| Both     | *0.0982*  | *0.0897*  | *0.3929* |  *0.4075* |
+| Both     | **0.0982**  | **0.0897**  | **0.3929** |  **0.4075** |
 | Lidar     | 0.1526  |  0.1213 | 0.7062 |  0.6030 |
 | Radar   | 0.2271  | 0.3466  | 0.6587 |  0.7631 |
 
