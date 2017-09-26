@@ -25,11 +25,11 @@ Simulation with only the Lidar - On: [youtube video](https://youtu.be/HWgJ2dBUb_
 
 Simulation with only the Radar - On: [youtube video](https://youtu.be/wNag24x1FrM)
 
-To summarize the results
+The table below summarizes the results for the three runs. It is clear that sensor fusion provided the best results for all the RMSE values (X, Y, VX, VY):
 
-| Sensor  | X         | Y           | VX        | VY        |
+| Sensor  | X         | Y           | VX        | VY         |
 |----------|---------|----------|----------|----------|
-| Both     | 0.0982  | 0.0897  | 0.3929 |  0.4075 |
+| Both     | *0.0982*  | *0.0897*  | *0.3929* |  *0.4075* |
 | Lidar     | 0.1526  |  0.1213 | 0.7062 |  0.6030 |
 | Radar   | 0.2271  | 0.3466  | 0.6587 |  0.7631 |
 
@@ -42,15 +42,15 @@ This repository includes two files that can be used to set up and install [uWebS
 ## Important Dependencies
 
 * cmake >= 3.5
- * All OSes: [click here for installation instructions](https://cmake.org/install/)
+    * All OSes: [click here for installation instructions](https://cmake.org/install/)
 * make >= 4.1 (Linux, Mac), 3.81 (Windows)
- * Linux: make is installed by default on most Linux distros
- * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
- * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
+   * Linux: make is installed by default on most Linux distros
+   * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
+   * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
 * gcc/g++ >= 5.4
- * Linux: gcc / g++ is installed by default on most Linux distros
- * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
- * Windows: recommend using [MinGW](http://www.mingw.org/)
+    * Linux: gcc / g++ is installed by default on most Linux distros
+    * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
+    * Windows: recommend using [MinGW](http://www.mingw.org/)
 
 ## Basic Build Instructions
 
